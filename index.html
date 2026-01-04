@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Adalet Arama</title>
+  <style>
+    body { 
+      font-family: Arial; 
+      max-width: 600px; 
+      margin: 100px auto; 
+      padding: 20px;
+      text-align: center;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    input { 
+      width: 100%; 
+      padding: 15px; 
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button { 
+      width: 100%;
+      padding: 15px 30px; 
+      font-size: 16px;
+      background: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    button:hover { background: #0052a3; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Adalet Sistemi</h1>
+    <form action="/api/ara">
+      <input type="text" name="site" placeholder="Gitmek istediğiniz adresi yazın (örn: google.com)" required>
+      <button type="submit">Git</button>
+    </form>
+  </div>
+</body>
+</html>
