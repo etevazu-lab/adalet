@@ -2,7 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Adalet Arama</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adalet Portal</title>
   <style>
     body { 
       font-family: Arial; 
@@ -10,42 +11,59 @@
       margin: 100px auto; 
       padding: 20px;
       text-align: center;
-      background: #f5f5f5;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
     }
     .container {
       background: white;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 50px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     }
-    h1 { color: #333; }
+    h1 { 
+      color: #333; 
+      margin-bottom: 20px;
+    }
     input { 
       width: 100%; 
       padding: 15px; 
       font-size: 16px;
       border: 2px solid #ddd;
-      border-radius: 5px;
+      border-radius: 8px;
       box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #667eea;
     }
     button { 
       width: 100%;
       padding: 15px 30px; 
-      font-size: 16px;
-      background: #0066cc;
+      font-size: 18px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 15px;
+      font-weight: bold;
     }
-    button:hover { background: #0052a3; }
+    button:hover { 
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🔍 Adalet Sistemi</h1>
+    <h1>🔍 Adalet Portal</h1>
     <form action="/api/ara">
-      <input type="text" name="site" placeholder="Gitmek istediğiniz adresi yazın (örn: google.com)" required>
+      <input 
+        type="text" 
+        name="site" 
+        placeholder="Web sitesi adresi (örn: wikipedia.org)" 
+        required
+        autofocus
+      >
       <button type="submit">Git</button>
     </form>
   </div>
