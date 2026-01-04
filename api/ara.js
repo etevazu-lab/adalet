@@ -57,14 +57,18 @@ export default async function handler(req, res) {
     const response = await fetch(targetUrl, {
       method: req.method,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': req.headers['accept'] || 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'User-Agent': req.headers['user-agent'] || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        'Accept': req.headers['accept'] || 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
         'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
         'Accept-Encoding': 'gzip, deflate, br',
-        'Referer': parsedUrl.origin,
+        'Referer': req.headers['referer'] || parsedUrl.origin,
         'DNT': '1',
         'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1'
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Cache-Control': 'max-age=0'
       },
       redirect: 'follow'
     });
@@ -72,7 +76,7 @@ export default async function handler(req, res) {
     const contentType = response.headers.get('Content-Type') || '';
     const origin = parsedUrl.origin;
     
-    // Binary içerik (resimler, fontlar, vb.) - ÖNCE KONTROL ET
+    // Binary içerik (resimler, fontlar, vb.)
     if (contentType.includes('image/') || 
         contentType.includes('font/') || 
         contentType.includes('video/') ||
@@ -100,18 +104,18 @@ export default async function handler(req, res) {
         }
       };
       
-      // Tüm URL'leri düzelt (daha kapsamlı)
+      // Tüm URL'leri düzelt
       html = html.replace(
         /(href|src|action|data|poster|background)\s*=\s*["']([^"']+)["']/gi,
         (match, attr, url) => {
-          if (url.startsWith('data:') || url.startsWith('javascript:') || url.startsWith('mailto:') || url.startsWith('#')) {
+          if (url.startsWith('data:') || url.startsWith('javascript:') || url.startsWith('mailto:') || url.startsWith('tel:') || url.startsWith('#')) {
             return match;
           }
           return `${attr}="${proxyUrl(url)}"`;
         }
       );
       
-      // CSS içindeki url() - daha gelişmiş
+      // CSS içindeki url()
       html = html.replace(
         /url\s*\(\s*["']?([^"')]+)["']?\s*\)/gi,
         (match, url) => {
@@ -135,7 +139,7 @@ export default async function handler(req, res) {
         }
       );
       
-      // Base tag ekle (önemli!)
+      // Base tag ekle
       if (!html.includes('<base')) {
         html = html.replace(
           /<head[^>]*>/i,
@@ -143,13 +147,13 @@ export default async function handler(req, res) {
         );
       }
       
-      // CSP ve security header'ları kaldır
+      // CSP header'ları kaldır
       html = html.replace(
         /<meta[^>]*http-equiv=["']Content-Security-Policy["'][^>]*>/gi,
         ''
       );
       
-      // Navigasyon çubuğu ekle
+      // Navigasyon çubuğu
       const navBar = `
         <style>
           .adalet-nav {
@@ -251,7 +255,6 @@ export default async function handler(req, res) {
       
       html = html.replace(/<body[^>]*>/i, `$&${navBar}`);
       
-      // Response headers
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.removeHeader('Content-Security-Policy');
